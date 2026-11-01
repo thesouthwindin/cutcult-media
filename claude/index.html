@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How this Instagram runs itself, built with Claude · Cutcult</title>
+<meta name="description" content="Two editors, a post every day, and we still approve every single one. The full setup, free.">
+<meta property="og:title" content="How this Instagram runs itself, built with Claude · Cutcult">
+<meta property="og:description" content="Two editors, a post every day, and we still approve every single one. The full setup, free.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#120203; --ember:#2a0506; --red:#f0443a; --cream:#ece7da; --grey:#a5a4a4; --marker:#f8dc00; --line:rgba(236,231,218,.12); }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--ink); background-image:radial-gradient(circle at 25% 0%, rgba(179,20,28,.35), transparent 55%); color:var(--cream);
+         font:400 18px/1.65 Geist, system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+  header, main, footer { max-width:760px; margin:0 auto; padding:0 20px; }
+  header { padding-top:40px; display:flex; justify-content:space-between; align-items:center; gap:16px; }
+  header svg { height:22px; width:auto; }
+  .chip { font:500 12px/1 "Geist Mono", monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--grey); }
+  h1 { font-weight:800; font-size:clamp(40px, 8vw, 72px); line-height:.98; letter-spacing:-.04em; margin:56px 0 20px; }
+  h1 + p strong { color:var(--red); font-weight:700; }
+  h2 { font-weight:800; font-size:32px; letter-spacing:-.03em; margin:64px 0 16px; }
+  h2::before { content:""; display:block; width:48px; height:4px; background:var(--red); margin-bottom:18px; }
+  h3 { font-weight:700; font-size:22px; letter-spacing:-.02em; margin:40px 0 8px; }
+  a { color:var(--red); }
+  strong { color:#fff; }
+  em { font-family:"Instrument Serif", serif; font-size:1.15em; }
+  hr { border:0; border-top:1px solid var(--line); margin:48px 0; }
+  table { width:100%; border-collapse:collapse; font-size:15px; margin:16px 0; display:block; overflow-x:auto; }
+  th, td { text-align:left; vertical-align:top; padding:10px 12px; border-bottom:1px solid var(--line); }
+  th { font:500 12px/1.3 "Geist Mono", monospace; letter-spacing:.08em; text-transform:uppercase; color:var(--grey); }
+  td:first-child { white-space:nowrap; }
+  code { font:400 .88em "Geist Mono", monospace; background:var(--ember); padding:2px 6px; border-radius:6px; }
+  pre { background:#0a0101; border:1px solid var(--line); border-radius:14px; padding:16px 18px; overflow-x:auto; }
+  pre code { background:none; padding:0; }
+  blockquote { margin:18px 0; padding:16px 20px; border-left:4px solid var(--marker); background:rgba(236,231,218,.05); border-radius:0 14px 14px 0; }
+  blockquote p { margin:0; }
+  ul, ol { padding-left:22px; }
+  li { margin:6px 0; }
+  footer { padding:24px 20px 64px; color:var(--grey); font-size:14px; }
+  ::selection { background:var(--red); color:#0f0f14; }
+</style>
+</head>
+<body>
+<header><svg xmlns="http://www.w3.org/2000/svg" viewBox="59 483 910 141"><path class="logo__eye" fill="#f6efee" fill-rule="evenodd" d="M346.7,536.7l-6.9-5.2-6.8-4.9-6.8-4.6-6.8-4.4-6.7-4.1-6.7-3.8-6.7-3.6-6.7-3.3-6.7-3.1-6.6-2.8-6.6-2.5-6.6-2.2-6.6-2-6.6-1.7-6.6-1.4-6.6-1.2-6.6-.9-6.6-.7-6.6-.4h-6.5c0-.1-6.5,0-6.5,0l-6.6.4-6.6.7-6.6.9-6.6,1.2-6.6,1.4-6.6,1.7-6.6,2-6.6,2.2-6.6,2.5-6.6,2.8-6.7,3.1-6.7,3.3-6.7,3.6-6.7,3.8-6.7,4.1-6.8,4.4-6.8,4.6-6.8,4.9-6.9,5.2-6.9,5.4-7,5.7-7,6,4.1,3.5h.2l101.7-6.4-.5-4.6v-1l1.8-10.6v-.3l.2-.3v-.3c.1,0,4.6-9.9,4.6-9.9v-.3c.1,0,.3-.3.3-.3l.2-.3,7-8.6.2-.3.3-.2.3-.2,9.1-6.6.3-.2.3-.2h.3c0-.1,10.6-4.2,10.6-4.2h.3l.3-.2h.3l11.5-1.3h1l11.6,1.8h.3l.3.2h.3c0,.1,10.9,4.9,10.9,4.9l.3.2.3.2.3.2,9.5,7.6.2.2.2.2.2.3,7.3,9.9.2.3.2.3v.3c.1,0,4.7,11.6,4.7,11.6v.3c.1,0,.2.3.2.3v.3l.6,4.8,88.9-5.6-3.4-2.7v.1ZM80.1,570.8l6.9,5.2,6.8,4.9,6.8,4.6,6.8,4.4,6.7,4.1,6.7,3.8,6.7,3.6,6.7,3.3,6.7,3.1,6.6,2.8,6.6,2.5,6.6,2.2,6.6,2,6.6,1.7,6.6,1.4,6.6,1.2,6.6.9,6.6.7,6.6.4h6.5c0,.1,6.5,0,6.5,0l6.6-.4,6.6-.7,6.6-.9,6.6-1.2,6.6-1.4,6.6-1.7,6.6-2,6.6-2.2,6.6-2.5,6.6-2.8,6.7-3.1,6.7-3.3,6.7-3.6,6.7-3.8,6.7-4.1,6.8-4.4,6.8-4.6,6.8-4.9,6.9-5.2,6.9-5.4,7-5.7,7-6-4.1-3.5h-.2l-101.6,6.4-1.5,9.8v.4l-.1.3v.3c-.1,0-5.3,11.9-5.3,11.9l-.2.3-.2.3-.2.3-8.2,10.3-.2.2-.2.2-.3.2-10.7,8-.3.2-.3.2h-.3c0,.1-12.6,5.1-12.6,5.1h-.3c0,.1-.3.2-.3.2h-.3l-13.6,1.7h-1.2l-.4-.1h-.4c0-.1-.3-.3-.3-.3l-.3-.2-.3-.2-.3-.2-.3-.3-.2-.3-.2-.3-.2-.3v-.4c-.1,0-.2-.4-.2-.4v-2l.2-.4v-.4c.1,0,.3-.3.3-.3l.2-.3.2-.3.3-.3.3-.2.3-.2.3-.2h.4c0-.1.4-.2.4-.2h.4l13.1-1.6,11.6-4.6,9.9-7.4,7.5-9.5,4.8-11,1.1-7.6-8.6.5-.8,5v.3l-.2.3v.3c-.1,0-3.8,8-3.8,8l-.2.3-.2.3-.2.3-5.7,6.9-.2.3-.2.2-.3.2-7.4,5.3-.3.2-.3.2h-.3c0,.1-8.7,3.4-8.7,3.4h-.3l-.3.2h-.3l-9.5,1h-1l-9.6-1.6h-.3l-.3-.2h-.3c0-.1-9-4.2-9-4.2l-.3-.2-.3-.2-.3-.2-7.8-6.4-.3-.2-.2-.3-.2-.3-6-8.3-.2-.3-.2-.3v-.3c-.1,0-2-5-2-5l-91.1,5.7,3.4,2.7.3.2ZM204.9,548.4l15.9-1-.5-1.2-1.8-2.3-2.2-1.6-2.4-.9-2.4-.3-2.2.4-1.8.9-1.4,1.2-.9,1.4-.4,1.4v1.3l.1.7h0ZM219.9,559.2l-25.8,1.6,3.6,2.9,4.3,1.9,4.4.7,4.3-.5,3.8-1.5,3.2-2.4,2.2-2.8v.1ZM189,549.4l8.1-.5h0v-4.5l.9-2.5v-.3c.1,0,.3-.3.3-.3l.2-.3,1.5-2.3.2-.3.2-.3.2-.2,2.2-1.9.3-.2.3-.2.3-.2,2.8-1.3h.3c0-.1.3-.2.3-.2h.4l3.2-.6h1.2l3.4.4h.4l.3.1h.3c0,.1,3.4,1.4,3.4,1.4h.3c0,.1.3.3.3.3l.3.2,3,2.2.3.2.2.3.2.3,2.4,3.1.2.3.2.3v.3c.1,0,1.7,3.8,1.7,3.8v.3h.1l8.5-.5v-.5l-2.6-6.8-4.1-5.8-5.3-4.4-6.1-2.8-6.5-1.1-6.4.6-5.8,2.2-4.9,3.5-3.7,4.5-2.4,5.2-.9,5.4.3,3v.1ZM237.3,558.1l-8.7.5-1.6,3.8-.2.3-.2.3-.2.3-3,3.8-.2.3-.2.2-.3.2-4,3-.3.2-.3.2h-.3c0,.1-4.8,2-4.8,2h-.3c0,.1-.3.2-.3.2h-.3l-5.3.6h-1.1l-5.4-.9h-.4l-.3-.2h-.3c0-.1-5.2-2.4-5.2-2.4l-.3-.2-.3-.2-.3-.2-4.6-3.7-.2-.2-.2-.3-.2-.3-3.1-4.2-9.1.6.9,2.3,5.4,7.5,7,5.7,8,3.6,8.5,1.4,8.5-.8,7.8-2.9,6.6-4.7,5.1-6.1,3.2-7.1.4-2.7.1.1ZM172.9,550.4l8.4-.5-.3-3.2v-1l1.1-6.4v-.3l.2-.3v-.3c.1,0,2.9-6.1,2.9-6.1l.2-.3.2-.3.2-.3,4.4-5.3.2-.3.2-.2.3-.2,5.7-4.1.3-.2.3-.2h.3c0-.1,6.8-2.7,6.8-2.7h.3c0-.1.3-.2.3-.2h.3l7.4-.7h1l7.5,1.3h.3l.3.2h.3c0,.1,7.1,3.3,7.1,3.3l.3.2.3.2.3.2,6.1,5.1.2.2.2.3.2.3,4.7,6.6.2.3.2.3v.3c.1,0,3,7.8,3,7.8v.3c.1,0,.2.3.2.3v.3l.2,1.3,8.4-.5-.4-3.9-4.2-10.7-6.7-9.1-8.7-7-10-4.4-10.6-1.7-10.5,1.1-9.7,3.7-8.3,6-6.3,7.8-4,9-1.5,9.6.4,4.4h-.2Z"></path><g transform="translate(40 0)"><g class="logo__cut" fill="#f6efee"><path d="M396.62,515.04h15.65v73.01h43.21v-10.43h15.65v7.45c0,11.17-7.45,18.62-18.63,18.62h-38.74c-10.28-.6-17.14-7.9-17.14-18.62v-70.03ZM469.64,525.47h-15.65v-10.43h-41.72v-15.65h38.74c11.18,0,18.62,7.45,18.62,18.63v7.45Z"></path><path d="M478.57,499.4h15.65v88.66h43.21v15.65h-40.23c-11.17,0-18.62-7.45-18.62-18.62v-85.68ZM553.07,588.05h-15.64v-88.66h15.64v88.66Z"></path><path d="M590.02,514.3h-24.59v-14.9h64.82v14.9h-24.59v89.4h-15.64v-89.4Z"></path></g><g class="logo__cult" fill="#aea6a5"><path d="M642.53,515.04h15.64v73.01h43.21v-10.43h15.65v7.45c0,11.17-7.45,18.62-18.63,18.62h-38.74c-10.28-.6-17.13-7.9-17.13-18.62v-70.03ZM715.54,525.47h-15.65v-10.43h-41.72v-15.65h38.74c11.17,0,18.62,7.45,18.62,18.63v7.45Z"></path><path d="M724.47,499.4h15.64v88.66h43.21v15.65h-40.23c-11.17,0-18.62-7.45-18.62-18.62v-85.68ZM798.97,588.05h-15.65v-88.66h15.65v88.66Z"></path><path d="M816.86,499.4h15.64v88.66h38v15.65h-35.02c-11.17,0-18.62-7.45-18.62-18.62v-85.68Z"></path><path d="M888.08,514.3h-24.58v-14.9h64.82v14.9h-24.58v89.4h-15.65v-89.4Z"></path></g></g></svg><span class="chip">Free guide · Day 16/90</span></header>
+<main>
+<h1>How this Instagram runs itself, built with Claude</h1>
+<p><strong>Two editors, a post every day, and we still approve every single one. The full setup, free.</strong></p>
+<p>Our Instagram, LinkedIn and YouTube Shorts run on a pipeline we built with Claude Code. Ideas go in on Telegram. Claude plans the week, drafts the scripts and captions, edits the reels in code, and a tiny server posts them on time. We step in at three checkpoints and nothing goes out without our yes.</p>
+<p>This is the whole thing: what it does, the stack, the steps, the prompts, and the rules we learned the hard way.</p>
+<p>From Cutcult, a post-production studio. Instagram: @cutcult.in</p>
+<hr>
+<h2>What it does</h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>What happens</th>
+<th>Who does it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Inbox</strong></td>
+<td>We send links, voice notes, photos and ideas to a private Telegram bot, tagged <code>#idea</code>, <code>#ref</code>, <code>#story</code> or <code>#asset</code>.</td>
+<td>Us, from our phones</td>
+</tr>
+<tr>
+<td><strong>Report</strong></td>
+<td>Every Sunday it pulls last week&#39;s Instagram numbers and writes what worked and why.</td>
+<td>Claude</td>
+</tr>
+<tr>
+<td><strong>Research</strong></td>
+<td>It reads every reference we sent (frames, captions, comments) and checks festivals, releases and tool news for the next two weeks.</td>
+<td>Claude</td>
+</tr>
+<tr>
+<td><strong>Plan</strong></td>
+<td>21 slots for the week: reels, carousels, stories, LinkedIn.</td>
+<td>Claude drafts, <strong>we approve (checkpoint 1)</strong></td>
+</tr>
+<tr>
+<td><strong>Write</strong></td>
+<td>Three hooks per piece, the script, on-screen text, captions for each platform.</td>
+<td>Claude drafts, <strong>we approve (checkpoint 2)</strong></td>
+</tr>
+<tr>
+<td><strong>Voice</strong></td>
+<td>Voiceovers in our own cloned voice. We approve one sample before the batch.</td>
+<td>ElevenLabs</td>
+</tr>
+<tr>
+<td><strong>Edit</strong></td>
+<td>Every reel and carousel is rendered from code in our brand style, with music and sound effects cut to the voice.</td>
+<td>Claude + Remotion</td>
+</tr>
+<tr>
+<td><strong>Review</strong></td>
+<td>We watch every render. Approve, or reject with a reason. Every reason is saved so the next week is better.</td>
+<td><strong>Us (checkpoint 3)</strong></td>
+</tr>
+<tr>
+<td><strong>Post</strong></td>
+<td>A small server posts on time, replies by DM to people who comment a giveaway keyword, and sends us anything we post by hand on Telegram five minutes early.</td>
+<td>Cloudflare Worker</td>
+</tr>
+</tbody></table>
+<p>AI does the busy work. We do the cut.</p>
+<hr>
+<h2>The stack (and why)</h2>
+<table>
+<thead>
+<tr>
+<th>Piece</th>
+<th>What it does</th>
+<th>Why we picked it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Claude Code</strong></td>
+<td>Does the work inside one project folder</td>
+<td>Not the chat window. It reads every file, runs scripts, renders video and remembers the rules you write down.</td>
+</tr>
+<tr>
+<td><strong><code>CLAUDE.md</code></strong></td>
+<td>The rulebook Claude reads every session</td>
+<td>Hard rules, the weekly pipeline, folder map. The most important file in the project.</td>
+</tr>
+<tr>
+<td><strong>Skills</strong> (<code>.claude/skills/</code>)</td>
+<td>One small instruction file per job: hook writer, script writer, caption writer, brand check…</td>
+<td>Each job has its own rules, so prompts stay short and consistent.</td>
+</tr>
+<tr>
+<td><strong>Git + a private GitHub repo</strong></td>
+<td>Saves every version</td>
+<td>Every week is a commit. You can always go back.</td>
+</tr>
+<tr>
+<td><strong>Remotion</strong></td>
+<td>Video and carousels as code (React)</td>
+<td>One template, endless reels in the same style. Changes apply everywhere.</td>
+</tr>
+<tr>
+<td><strong>ElevenLabs</strong></td>
+<td>Voiceover in your cloned voice, music and SFX</td>
+<td>Your voice without recording every take.</td>
+</tr>
+<tr>
+<td><strong>whisper.cpp</strong></td>
+<td>Times every word of the voiceover</td>
+<td>Runs on your Mac, free. Cuts land on the exact word.</td>
+</tr>
+<tr>
+<td><strong>Cloudflare Worker + KV</strong></td>
+<td>Posts on schedule, handles the DMs, talks to Telegram</td>
+<td>Free plan, runs every 5 minutes, no server to look after.</td>
+</tr>
+<tr>
+<td><strong>Instagram API with Instagram Login</strong></td>
+<td>Publishing and comment replies</td>
+<td>The official API. No passwords stored anywhere.</td>
+</tr>
+<tr>
+<td><strong>Telegram bot</strong></td>
+<td>Inbox in, reminders out</td>
+<td>Free, works from any phone.</td>
+</tr>
+<tr>
+<td><strong>GitHub Pages</strong></td>
+<td>Hosts the media files the API pulls from</td>
+<td>Free public URLs for each reel and image.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>What it costs</h2>
+<p>The Cloudflare, GitHub, Telegram and Instagram parts run on free plans. You pay for Claude and for ElevenLabs voice credits. That&#39;s it.</p>
+<hr>
+<h2>The pipeline, step by step</h2>
+<h3>1. Write your brand down first</h3>
+<p>Before any code. This is the step that makes or breaks it, and the one AI can&#39;t do for you.</p>
+<ul>
+<li><strong>Brand guide:</strong> colours, fonts, logo rules, safe zones.</li>
+<li><strong>Voice:</strong> how you talk. Words you use, words you never use.</li>
+<li><strong>Banned list:</strong> the generic stuff (&quot;unlock&quot;, &quot;elevate&quot;, stock smiling people). Claude checks every piece against it.</li>
+<li><strong>Taste log:</strong> an empty file. Every time you approve or reject something, the reason goes here. After a few weeks it becomes your real style guide.</li>
+</ul>
+<h3>2. Set up the project</h3>
+<ol>
+<li>Install Node.js, Git, Claude Code and ffmpeg.</li>
+<li>Make a folder, <code>git init</code>, and a <strong>private</strong> GitHub repo.</li>
+<li>Write <code>CLAUDE.md</code>: who you are, the hard rules, the weekly steps, where files go.</li>
+<li>Keep secrets in a <code>.env</code> file that git ignores. Never paste keys into chat.</li>
+</ol>
+<blockquote>
+<p><strong>Prompt:</strong> Read CLAUDE.md and the brand folder. Set up a Remotion project in <code>remotion/</code> with our colours and fonts as tokens. Make one composition for a 1080×1920 reel and one for a 1080×1350 carousel. Render one sample of each so I can approve the style.</p>
+</blockquote>
+<p>Don&#39;t move on until the sample looks like you. Reject it with reasons until it does.</p>
+<h3>3. Turn each job into a skill</h3>
+<p>One file per job, each short. Ours: report, ingest references, trend scan, hooks, scripts, captions, carousel design, reel edit, brand check, publish, taste log.</p>
+<blockquote>
+<p><strong>Prompt:</strong> Create a skill called brand-check. It reads the brand folder and the taste log, then checks a script, caption or render for banned words, safe zones, colours, fonts and our hard rules. It returns PASS or a numbered fix list. Run it before you show me anything.</p>
+</blockquote>
+<h3>4. Make the weekly run one command</h3>
+<p>Ours is <code>/weekly</code>. It runs the steps in order and <strong>stops at each checkpoint</strong> until we reply.</p>
+<blockquote>
+<p><strong>Prompt:</strong> Create a /weekly command. Steps: pull last week&#39;s insights, process new references, check upcoming dates, plan the week (stop for my approval), write all copy (stop), generate one voice sample (stop), render everything and run brand-check, show me a review table (stop), then schedule only what I approved.</p>
+</blockquote>
+<h3>5. Connect Instagram</h3>
+<ol>
+<li>Create a Meta developer app with <strong>Instagram API with Instagram Login</strong>.</li>
+<li>Add your Instagram professional account and generate a token.</li>
+<li>Switch the app to Live, or nobody outside the app&#39;s roles can see your replies.</li>
+</ol>
+<p>Ask Claude Code to write the publishing code against the official API, and test with one post first.</p>
+<h3>6. Deploy the Worker</h3>
+<p>A Cloudflare Worker with a cron trigger every 5 minutes: it reads the week&#39;s queue, posts anything due, refreshes the token weekly, checks giveaway comments and replies by DM, and sends Telegram reminders for posts you do by hand (trend-audio reels, YouTube Shorts).</p>
+<blockquote>
+<p><strong>Prompt:</strong> Write a Cloudflare Worker with a 5-minute cron. It stores the week&#39;s queue in KV, publishes due items through the Instagram API, polls comments on giveaway posts for the keyword and sends one private reply per person, and messages me on Telegram if anything fails. Add a script that pushes the queue from my laptop.</p>
+</blockquote>
+<h3>7. Add the Telegram inbox</h3>
+<p>A bot that only answers your own chat IDs. Messages land in the Worker; a script on your laptop pulls them into dated folders. Voice notes get transcribed with whisper.</p>
+<hr>
+<h2>Rules we learned</h2>
+<ul>
+<li><strong>Nothing posts without approval.</strong> Only items marked approved get scheduled. Always.</li>
+<li><strong>Log every reason.</strong> &quot;Rejected&quot; teaches nothing. &quot;Rejected: the text is too small and nothing moves&quot; fixes next week.</li>
+<li><strong>No automated engagement.</strong> No auto-likes, auto-follows or auto-comments. The only automatic DM goes to someone who asked for it by commenting a keyword.</li>
+<li><strong>Licensed sound only.</strong> Your own library, music you generate, or audio you add inside Instagram.</li>
+<li><strong>Keep it honest.</strong> If AI wrote the first draft, you still own every word that goes out.</li>
+</ul>
+<hr>
+<h2>What we still do by hand</h2>
+<ul>
+<li>Approve the plan, the copy and every render.</li>
+<li>Post trend-audio reels and YouTube Shorts (the bot sends us the file and caption five minutes before).</li>
+<li>Reply to real comments. That part is the point.</li>
+</ul>
+<p>Questions? Comment on the reel or DM @cutcult.in.</p>
+
+
+</main>
+<footer>© Cutcult · cutcult.in · Free to read and share with credit.</footer>
+</body>
+</html>
